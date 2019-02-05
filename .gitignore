@@ -1,0 +1,15 @@
+.gradle/
+.idea/
+
+gradlew
+gradlew.bat
+
+*.iml
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+build/
