@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 class WebSecurity : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
-        http.anonymous()
+        http
+                .antMatcher("*")
+                .anonymous()
     }
 }
