@@ -49,8 +49,8 @@ dependencies {
 	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 	implementation "org.jetbrains.kotlin:kotlin-reflect"
-	testImplementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-	testImplementation "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
+	implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+	implementation "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
 	testImplementation 'org.assertj:assertj-core:3.11.1'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
