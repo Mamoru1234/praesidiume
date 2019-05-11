@@ -22,4 +22,15 @@ class ArtifactControllerTest {
         Assertions.assertThat(response.isSuccessful).isTrue()
         println(response.body()?.string())
     }
+
+    @Test
+    fun getPreBuildCase() {
+        val queryParams = mapOf(
+                "node_abi" to "node-v64",
+                "platform" to "linux",
+                "arch" to "x64"
+        )
+        val response = apiClient.getMetadata("libxmljs", "0.19.5", queryParams).execute()
+        Assertions.assertThat(response.isSuccessful).isTrue()
+    }
 }
