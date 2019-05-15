@@ -7,6 +7,10 @@ import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
 interface ArtifactApi {
+    @GET("/artifact/metadata/{packageName}")
+    fun getPackage(
+            @Path("packageName") packageName: String
+    ): Call<ResponseBody>
     @GET("/artifact/metadata/{packageName}/{packageVersion}")
     fun getMetadata(
             @Path("packageName") packageName: String,
