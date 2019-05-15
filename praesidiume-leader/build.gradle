@@ -53,6 +53,8 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
     implementation "commons-io:commons-io:2.6"
+    implementation "org.rauschig:jarchivelib:1.0.0"
+
     testImplementation 'org.assertj:assertj-core:3.11.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'

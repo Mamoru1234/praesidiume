@@ -49,14 +49,15 @@ class PackageArtifactService(
             packageVersion: String
     ): PackageVersionDto {
         val parametersNode = mapper.valueToTree<ObjectNode>(params)
-        val artifactOpt = packageVersionArtifactDao.findByNameAndVersionAndParameters(
-                name = packageName,
-                version = packageVersion,
-                parameters = parametersNode
-        )
-        if (artifactOpt.isPresent) {
-            return convertArtifactToDto(artifactOpt.get())
-        }
+        // TODO uncomment when artifact build will finished
+//        val artifactOpt = packageVersionArtifactDao.findByNameAndVersionAndParameters(
+//                name = packageName,
+//                version = packageVersion,
+//                parameters = parametersNode
+//        )
+//        if (artifactOpt.isPresent) {
+//            return convertArtifactToDto(artifactOpt.get())
+//        }
         val packageVersionDescriptionOpt = packageVersionDescriptionDao.findByNameAndVersion(packageName, packageVersion)
         if (packageVersionDescriptionOpt.isEmpty) {
             throw ClientException("Description for $packageName $packageVersion not found")

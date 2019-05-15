@@ -22,23 +22,30 @@ import javax.persistence.PersistenceContext
 
 @Service
 class NpmPackageBuilder(
+        private val preGypPackageProcessor: PreGypPackageProcessor,
         private val npmClientProvider: NpmClientProvider
 ) {
     @PersistenceContext
     lateinit var entityManager: EntityManager
-
-    fun buildPackage(metadata: ObjectNode): ObjectNode {
-        println("Building package")
-        println(metadata)
-        return metadata
-    }
 
     fun buildPackage(
             packageVersionDescriptionEntity: PackageVersionDescriptionEntity,
             params: ObjectNode
     ): PackageVersionArtifactEntity {
         println("Building package ${packageVersionDescriptionEntity.name} ${packageVersionDescriptionEntity.version}")
-        println(packageVersionDescriptionEntity.name)
+        val metadata = getPackageMetadata(packageVersionDescriptionEntity)
+        if (!packageVersionDescriptionEntity.parameters.isEmpty()) {
+            println("Considering as native package")
+            val npmSource = downloadNpmSource(metadata)
+            val resultSource = preGypPackageProcessor.processPackage(
+                    packageVersionDescriptionEntity, metadata, params, npmSource)
+            println("Sources combined")
+            return createArtifact(packageVersionDescriptionEntity, params, resultSource)
+        }
+        return rebuildUsualPackage(packageVersionDescriptionEntity, params, metadata)
+    }
+
+    private fun getPackageMetadata(packageVersionDescriptionEntity: PackageVersionDescriptionEntity): ObjectNode {
         val response = npmClientProvider.getClient()
                 .getPackageVersionMeta(packageVersionDescriptionEntity.name, packageVersionDescriptionEntity.version)
                 .execute()
@@ -47,7 +54,7 @@ class NpmPackageBuilder(
         }
         val rawMetadata = response.body()
                 ?: throw ClientException("Body in meta should be present")
-        return rebuildUsualPackage(packageVersionDescriptionEntity, params, rawMetadata as ObjectNode)
+        return rawMetadata as ObjectNode
     }
 
     fun rebuildUsualPackage(
@@ -86,13 +93,7 @@ class NpmPackageBuilder(
         val fileName = "${metadata.get("name").asText()}-${metadata.get("version").asText()}.tgz"
         val fileStorePath = "/home/alexei/temp/dyplom_storage"
         val packageFile = File("$fileStorePath/$fileName")
-        if (!packageFile.exists()) {
-            val response = npmClientProvider.getClient().downloadArchive(tarballUrl).execute()
-            if (!response.isSuccessful) {
-                throw ClientException("Cannot download $tarballUrl")
-            }
-            IOUtils.copyLarge(response.body()!!.byteStream(), FileOutputStream(packageFile))
-        }
+        npmClientProvider.downloadFile(packageFile, tarballUrl)
         verifyIntegrity(dist, packageFile)
         return packageFile
     }
