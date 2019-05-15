@@ -1,10 +1,7 @@
 package com.github.mamoru.praesidiume.praesidiumeleader.entity
 
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.OneToMany
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "package")
@@ -14,6 +11,6 @@ data class PackageEntity(
 
     var name: String,
 
-    @OneToMany
-    var versions: Set<PackageVersionDescriptionEntity>
+    @OneToMany(mappedBy = "packageEntity")
+    var versions: List<PackageVersionDescriptionEntity>
 )

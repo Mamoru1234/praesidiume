@@ -22,7 +22,10 @@ data class PackageVersionDescriptionEntity(
     @Convert(converter = JacksonNodeConverter::class)
     var dependencies: ObjectNode,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_package")
-    var packageEntity: PackageEntity
+    @ManyToOne
+    @JoinColumn(name = "fk_package", nullable = false)
+    var packageEntity: PackageEntity,
+
+    @OneToMany(mappedBy = "packageVersionEntity", fetch = FetchType.LAZY)
+    var artifacts: List<PackageVersionArtifactEntity>
 )

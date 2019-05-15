@@ -29,7 +29,7 @@ data class PackageVersionArtifactEntity(
         @Lazy
         var content: Blob,
 
-        @ManyToOne(fetch = FetchType.LAZY)
+        @ManyToOne
         @JoinColumn(name = "fk_package_version")
-        var packageEntity: PackageVersionDescriptionEntity
+        var packageVersionEntity: PackageVersionDescriptionEntity
 )

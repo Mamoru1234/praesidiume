@@ -20,12 +20,14 @@ class ArtifactControllerTest {
     fun getPackageMeta() {
         val response = apiClient.getPackage("lodash").execute()
         Assertions.assertThat(response.isSuccessful).isTrue()
+        println(response.body()!!.string())
     }
 
     @Test
     fun getBinaryPackageMeta() {
         val response = apiClient.getPackage("libxmljs").execute()
         Assertions.assertThat(response.isSuccessful).isTrue()
+        println(response.body()!!.string())
     }
 
     @Test

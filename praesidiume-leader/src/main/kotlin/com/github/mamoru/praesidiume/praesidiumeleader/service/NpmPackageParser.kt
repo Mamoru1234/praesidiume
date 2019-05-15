@@ -38,7 +38,7 @@ class NpmPackageParser(
         println("Ensuring structure for package")
         println(metadata)
         val name = metadata.get("name").asText()
-        val packageEntity = PackageEntity(name = name, versions = emptySet())
+        val packageEntity = PackageEntity(name = name, versions = emptyList())
         packageEntityDao.save(packageEntity)
         val versions = getObjectNode(metadata, arrayOf("versions"))
         val versionsEntities = versions.fields().asSequence().mapNotNull {
@@ -62,10 +62,13 @@ class NpmPackageParser(
                     version = version,
                     parameters = parameters,
                     dependencies = dependencies,
-                    packageEntity = packageEntity
+                    packageEntity = packageEntity,
+                    artifacts = emptyList()
             )
         }
-        packageVersionDescriptionDao.saveAll(versionsEntities.toList())
+        val versionsSet = versionsEntities.toList()
+        packageVersionDescriptionDao.saveAll(versionsSet)
+        packageEntity.versions = versionsSet
         return packageEntity
     }
     fun hasClientScripts(metadata: ObjectNode): Boolean {
