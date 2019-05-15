@@ -2,8 +2,8 @@ package com.github.mamoru.praesidiume.praesidiumeleader.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.junit.jupiter.api.Test
 import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.Test
 
 class PreGypParserTest {
     @Test

@@ -2,7 +2,11 @@ package com.github.mamoru.praesidiume.praesidiumeleader.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.github.mamoru.praesidiume.praesidiumeleader.exception.ClientException
+import com.github.mamoru.praesidiume.praesidiumeleader.utils.isChildOf
+import com.github.mamoru.praesidiume.praesidiumeleader.utils.resolve
 import org.springframework.stereotype.Service
+import java.io.File
+import java.lang.IllegalArgumentException
 import java.net.URI
 
 val regex: Regex = Regex("\\{([a-x_]+)}")
@@ -52,5 +56,24 @@ class PreGypParser {
                 .resolve(fixSlash(remotePath))
                 .resolve(evalPart(packageName, properties))
                 .toString()
+    }
+
+    fun getBinarySourceDir(binary: ObjectNode, properties: Map<String, String>, packageDir: File): File {
+        var modulePath = evalPart(binary.get("module_path").asText(), properties)
+        if (modulePath.isBlank()) {
+            throw IllegalArgumentException("module path is blank")
+        }
+        if (!modulePath.endsWith("/")) {
+            modulePath += "/"
+        }
+        modulePath += ".."
+        val binarySourceDir = packageDir.resolve(modulePath)
+        if (!binarySourceDir.isChildOf(packageDir)) {
+            throw IllegalArgumentException("binary source out of package")
+        }
+        if (!binarySourceDir.mkdirs()) {
+            throw IllegalArgumentException("Cannot create binary source dir: ${binarySourceDir.absolutePath}")
+        }
+        return binarySourceDir
     }
 }

@@ -3,6 +3,7 @@ package com.github.mamoru.praesidiume.praesidiumeleader.controler
 import com.github.mamoru.praesidiume.praesidiumeleader.dto.PackageDto
 import com.github.mamoru.praesidiume.praesidiumeleader.dto.PackageVersionDto
 import com.github.mamoru.praesidiume.praesidiumeleader.service.PackageArtifactService
+import org.springframework.core.io.FileSystemResource
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -24,5 +25,14 @@ class ArtifactController(
             @PathVariable("packageVersion") packageVersion: String
     ): PackageVersionDto {
         return artifactService.getArtifact(params, packageName, packageVersion)
+    }
+
+    @GetMapping("/download/{packageName}/{packageVersion}")
+    fun getContent(
+            @RequestParam params: Map<String, String>,
+            @PathVariable("packageName") packageName: String,
+            @PathVariable("packageVersion") packageVersion: String
+    ): FileSystemResource {
+        return FileSystemResource(artifactService.getArtifactContent(params, packageName, packageVersion))
     }
 }

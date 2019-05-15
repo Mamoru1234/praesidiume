@@ -15,6 +15,7 @@ import com.github.mamoru.praesidiume.praesidiumeleader.entity.PackageVersionArti
 import com.github.mamoru.praesidiume.praesidiumeleader.entity.PackageVersionDescriptionEntity
 import com.github.mamoru.praesidiume.praesidiumeleader.exception.ClientException
 import org.springframework.stereotype.Service
+import java.io.File
 
 @Service
 class PackageArtifactService(
@@ -49,15 +50,14 @@ class PackageArtifactService(
             packageVersion: String
     ): PackageVersionDto {
         val parametersNode = mapper.valueToTree<ObjectNode>(params)
-        // TODO uncomment when artifact build will finished
-//        val artifactOpt = packageVersionArtifactDao.findByNameAndVersionAndParameters(
-//                name = packageName,
-//                version = packageVersion,
-//                parameters = parametersNode
-//        )
-//        if (artifactOpt.isPresent) {
-//            return convertArtifactToDto(artifactOpt.get())
-//        }
+        val artifactOpt = packageVersionArtifactDao.findByNameAndVersionAndParameters(
+                name = packageName,
+                version = packageVersion,
+                parameters = parametersNode
+        )
+        if (artifactOpt.isPresent) {
+            return convertArtifactToDto(artifactOpt.get())
+        }
         val packageVersionDescriptionOpt = packageVersionDescriptionDao.findByNameAndVersion(packageName, packageVersion)
         if (packageVersionDescriptionOpt.isEmpty) {
             throw ClientException("Description for $packageName $packageVersion not found")
@@ -65,6 +65,22 @@ class PackageArtifactService(
         val packageArtifact = npmPackageBuilder.buildPackage(packageVersionDescriptionOpt.get(), parametersNode)
         packageVersionArtifactDao.save(packageArtifact)
         return convertArtifactToDto(packageArtifact)
+    }
+
+    fun getArtifactContent(
+            params: Map<String, String>,
+            packageName: String,
+            packageVersion: String
+    ): File {
+        val parametersNode = mapper.valueToTree<ObjectNode>(params)
+        val artifact = packageVersionArtifactDao.findByNameAndVersionAndParameters(
+                name = packageName,
+                version = packageVersion,
+                parameters = parametersNode
+        ).orElseThrow {
+            ClientException("No artifact found")
+        }
+        return npmPackageBuilder.getPackageContent(artifact)
     }
 
     fun convertPackageToDto(packageEntity: PackageEntity): PackageDto {

@@ -46,5 +46,7 @@ class ArtifactControllerTest {
         )
         val response = apiClient.getMetadata("libxmljs", "0.19.5", queryParams).execute()
         Assertions.assertThat(response.isSuccessful).isTrue()
+        val content = apiClient.getPackageContent("libxmljs", "0.19.5", queryParams).execute()
+        Assertions.assertThat(content.isSuccessful).isTrue()
     }
 }

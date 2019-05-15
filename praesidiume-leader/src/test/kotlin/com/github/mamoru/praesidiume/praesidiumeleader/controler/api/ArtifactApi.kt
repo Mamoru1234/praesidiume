@@ -17,4 +17,11 @@ interface ArtifactApi {
             @Path("packageVersion") packageVersion: String,
             @QueryMap params: Map<String, String> = emptyMap()
     ): Call<ResponseBody>
+
+    @GET("/artifact/download/{packageName}/{packageVersion}")
+    fun getPackageContent(
+            @Path("packageName") packageName: String,
+            @Path("packageVersion") packageVersion: String,
+            @QueryMap params: Map<String, String> = emptyMap()
+    ): Call<ResponseBody>
 }
