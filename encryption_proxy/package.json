@@ -1,0 +1,21 @@
+{
+  "name": "encryption_proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\\"Error: no functionalTest specified\\\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "chai": "^4.2.0",
+    "express": "^4.17.0",
+    "express-http-proxy": "^1.5.1",
+    "fs-extra": "^8.0.1",
+    "mocha": "^6.1.4",
+    "openpgp": "^4.5.1"
+  }
+}

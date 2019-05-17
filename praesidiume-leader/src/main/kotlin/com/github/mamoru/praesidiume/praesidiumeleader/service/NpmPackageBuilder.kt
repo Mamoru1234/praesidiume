@@ -136,6 +136,7 @@ class NpmPackageBuilder(
             if (hexString != verifyText) {
                 throw ClientException("Integrity verification failed expected: $verifyText actual: $hexString")
             }
+            return
         }
         throw ClientException("Unknown dist integrity")
     }

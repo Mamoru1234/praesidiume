@@ -13,3 +13,7 @@ gradlew.bat
 *.ipr
 out/
 build/
+
+node_modules/
+package-lock.json
+encryption_proxy/keys/
