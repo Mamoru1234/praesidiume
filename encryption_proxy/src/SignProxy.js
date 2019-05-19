@@ -1,5 +1,6 @@
 const proxy = require('express-http-proxy');
 const { signJson } = require('./SignUtility');
+const cache = require('safe-memory-cache');
 
 function addSignProxy(app, url, privateKey) {
   app.use(createSignProxy(url, privateKey));
@@ -7,7 +8,10 @@ function addSignProxy(app, url, privateKey) {
 }
 
 function createSignProxy(url, privateKey) {
-  const signatures = {};
+  const signatures = new cache({
+    limit: 100000,
+    buckets: 1000,
+  });
   return proxy(url, {
     filter: (req) => {
       return req.method === 'GET' && !req.url.includes('/artifact/download/');
@@ -16,22 +20,23 @@ function createSignProxy(url, privateKey) {
       if (proxyRes.statusCode !== 200) {
         return proxyResData;
       }
-      const payload = JSON.parse(proxyResData.toString());
-      if (signatures[proxyResData] != null) {
-        return {
-          signature: signatures[proxyResData],
-          payload,
-        }
-      }
-      return signJson(payload, privateKey)
-        .then((signature) => {
-          console.timeEnd('signing');
-          signatures[proxyResData] = signature;
-          return ({
-            signature,
-            payload,
+      const text = proxyResData.toString();
+      const payload = JSON.parse(text);
+      if (signatures.get(text) == null) {
+        return signJson(payload, privateKey)
+          .then((signature) => {
+            console.timeEnd('signing');
+            signatures.set(text, signature);
+            return ({
+              signature,
+              payload,
+            });
           });
-        });
+      }
+      return {
+        signature: signatures.get(text),
+        payload,
+      };
     }
   });
 }
