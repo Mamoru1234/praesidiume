@@ -7,6 +7,7 @@ function addSignProxy(app, url, privateKey) {
 }
 
 function createSignProxy(url, privateKey) {
+  const signatures = {};
   return proxy(url, {
     filter: (req) => {
       return req.method === 'GET' && !req.url.includes('/artifact/download/');
@@ -16,9 +17,16 @@ function createSignProxy(url, privateKey) {
         return proxyResData;
       }
       const payload = JSON.parse(proxyResData.toString());
+      if (signatures[proxyResData] != null) {
+        return {
+          signature: signatures[proxyResData],
+          payload,
+        }
+      }
       return signJson(payload, privateKey)
         .then((signature) => {
           console.timeEnd('signing');
+          signatures[proxyResData] = signature;
           return ({
             signature,
             payload,
