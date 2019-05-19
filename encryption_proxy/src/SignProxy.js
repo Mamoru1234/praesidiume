@@ -17,10 +17,13 @@ function createSignProxy(url, privateKey) {
       }
       const payload = JSON.parse(proxyResData.toString());
       return signJson(payload, privateKey)
-        .then((signature) => ({
-          signature,
-          payload,
-        }));
+        .then((signature) => {
+          console.timeEnd('signing');
+          return ({
+            signature,
+            payload,
+          });
+        });
     }
   });
 }

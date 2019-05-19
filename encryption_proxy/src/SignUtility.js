@@ -14,6 +14,7 @@ async function signMessage(message, privateKey) {
     message: pgp.cleartext.fromText(message),
     privateKeys: [privateKey],
   };
+  console.time('signing');
   return (await pgp.sign(signOptions)).data
 }
 
