@@ -13,6 +13,7 @@ class DigestUtilsTest {
         messageDigest.updateFromFile(file)
         Assertions.assertThat(messageDigest.toHexString()).isEqualTo("b39ea6229ef607ecd89e2c8df12536891cac9b8d")
     }
+
     @Test
     fun testSha512Digest() {
         val file = File("/home/alexei/temp/dyplom_storage/lodash-4.17.11.tgz")

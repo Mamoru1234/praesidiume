@@ -78,6 +78,7 @@ class PackageArtifactService(
                 version = packageVersion,
                 parameters = parametersNode
         ).orElseThrow {
+            println("$packageName v$packageVersion $params")
             ClientException("No artifact found")
         }
         return npmPackageBuilder.getPackageContent(artifact)

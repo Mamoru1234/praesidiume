@@ -13,7 +13,7 @@ describe('Simple case of using proxy', function () {
     publicKey = await parsePublicKey(path.join(__dirname, '../keys/public.key'));
   });
   it('package metadata should be signed', async () => {
-    const response = await get(`http://localhost:3000/artifact/metadata/${package4}`);
+    const response = await get(`http://localhost:3000/artifact/metadata/${package}`);
     expect(response.status).is.eql(200);
     const { data } = response;
     const { payload, signature } = data;

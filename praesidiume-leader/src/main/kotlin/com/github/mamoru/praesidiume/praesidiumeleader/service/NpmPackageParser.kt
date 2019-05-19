@@ -18,8 +18,9 @@ val CLIENT_SIDE_SCRIPTS = listOf(
         "install",
         "postinstall",
         "preinstall",
-        "prepublish",
-        "prepare",
+//       Some packages has wrong usages of this scripts
+//        "prepublish",
+//        "prepare",
         "uninstall"
 )
 
@@ -87,6 +88,7 @@ class NpmPackageParser(
             return emptySet()
         }
         if (!isPreBuildSupported(rawMetadata)) {
+            println("Prebuild is not supported ${metadata.get("name")} ${metadata.get("version")}")
             return null
         }
         val binary = metadata.get("binary") as ObjectNode

@@ -58,6 +58,7 @@ class PreGypPackageProcessor(
         val result: MutableMap<String, String> = mapper.convertValue(rawParams, jacksonTypeRef<MutableMap<String, String>>())
         result["name"] = metadata.get("name").textValue()
         result["version"] = metadata.get("version").textValue()
+        result["module_name"] = metadata.get("binary").get("module_name").textValue()
         return result
     }
 }

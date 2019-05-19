@@ -12,6 +12,7 @@ import java.net.URI
 val regex: Regex = Regex("\\{([a-x_]+)}")
 
 val versioningVars = listOf("remote_path", "module_path", "package_name")
+val packageJsonProps = listOf("version", "name", "module_name")
 
 fun fixSlash(path: String): String = if (!path.endsWith("/")) { "$path/" } else { path }
 
@@ -28,7 +29,7 @@ class PreGypParser {
                             .toList()
                 }
                 .flatten()
-                .distinct()
+                .distinct() - packageJsonProps
     }
 
     fun evalPart(part: String, properties: Map<String, String>): String = regex.replace(part) {
