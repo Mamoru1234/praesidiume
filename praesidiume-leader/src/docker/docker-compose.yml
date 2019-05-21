@@ -9,3 +9,9 @@ services:
     environment:
       POSTGRES_PASSWORD: praesidiume
       POSTGRES_DB: praesidiume
+
+  cache:
+    image: redis:5-alpine
+    ports:
+      - '6379:6379'
+    restart: always
